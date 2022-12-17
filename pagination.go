@@ -2,6 +2,7 @@ package rest
 
 import (
 	"fmt"
+	"math"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,8 @@ const (
 	DefaultMaxPerPage = 99
 	// 默认起始索引
 	DefaultOffset = 0
+	// 默认页面数量
+	DefaultPageNum = 1
 )
 
 const (
@@ -28,9 +31,19 @@ const (
 // GetContentRange 获取分页范围信息
 // offset 与数据库的offset意义相同
 // perPage 与数据库limit 意义相同
-// totalPage 与数据库中counter意义相同
-func GetContentRange(tpl string, offset uint, perPage uint, totalPage uint) string {
-	return fmt.Sprintf(tpl, offset, perPage, totalPage)
+// count 与数据库中counter意义相同
+func GetContentRange(tpl string, offset uint, perPage uint, count uint) string {
+
+	pageCount := int(math.Ceil(float64(count) / float64(perPage)))
+	if pageCount == 0 {
+		pageCount = DefaultPageNum
+	}
+	// if page < 1 || page > pageCount {
+	// 	c.AbortWithStatus(http.StatusBadRequest)
+	// 	return
+	// }
+
+	return fmt.Sprintf(tpl, offset, perPage, pageCount)
 }
 
 // RenderList 列表展示
