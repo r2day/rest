@@ -58,6 +58,7 @@ func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwo
 		"message": "login success",
 		"expire": ExpireLoginSessionTime,
 		"expire_unit": "hours",
+		"user": accountId,
 	})
 
 	// TODO 发生登陆消息到mq中记录登陆信息
