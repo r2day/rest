@@ -31,7 +31,7 @@ func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwo
 	
 	// 检查密码hash是否相同
 	if err := bcrypt.CompareHashAndPassword(passwordFromDB, []byte(passwordFromReq)); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "message": "code is no correct"})
 		return
 	}
 
@@ -45,7 +45,7 @@ func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwo
 	token, err := claims.SignedString([]byte(secretKey))
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "message": "sign failed"})
 		return
 	}
 
