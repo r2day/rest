@@ -29,7 +29,7 @@ func init() {
 }
 
 // RenderLogin 返回登陆信息
-func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwordFromReq string, secretKey string, host string) {
+func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwordFromReq string, jwtKey []byte, host string) {
 
 	logCtx := log.WithField("account_id", accountId)
 	// 检查密码hash是否相同
@@ -51,7 +51,8 @@ func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwo
 		ExpiresAt: time.Now().Add(time.Hour * time.Duration(ExpireLoginSessionTime)).Unix(), //1 day
 	})
 
-	sDec, err := b64.StdEncoding.DecodeString(secretKey)
+	sEnc := b64.StdEncoding.EncodeToString(jwtKey)
+	sDec, err := b64.StdEncoding.DecodeString(sEnc)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "the sign isn't correct",
