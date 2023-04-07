@@ -1,6 +1,7 @@
 package rest
 
 import (
+	b64 "encoding/base64"
 	"net/http"
 	"os"
 	"strconv"
@@ -50,15 +51,27 @@ func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwo
 		ExpiresAt: time.Now().Add(time.Hour * time.Duration(ExpireLoginSessionTime)).Unix(), //1 day
 	})
 
-	// 签名密钥
-	token, err := claims.SignedString([]byte(secretKey))
-
+	sDec, err := b64.StdEncoding.DecodeString(secretKey)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "the sign isn't correct",
 			"account_id": accountId,
 			"status":     "error",
 			"title":      "An error occurred.",
+		})
+		logCtx.Error(err)
+		return
+	}
+	// 签名密钥
+	token, err := claims.SignedString(sDec)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message":    "the encode to base64 isn't correct",
+			"account_id": accountId,
+			"status":     "error",
+			"title":      "An error occurred.",
+			"error":      err.Error(),
 		})
 		logCtx.Error(err)
 		return
