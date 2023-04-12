@@ -54,13 +54,13 @@ func ParserParams(c *gin.Context) UrlParams {
 		WithField("hasRange", hasRange).WithField("range", rangeValue).
 		WithField("hasSort", hasSort).WithField("sort", sort)
 
-	logCtx.Info("==========================")
-
+	logCtx.Info("==========================", )
 	// 赋新的值
 	reqRange := ReqRange{
 		Offset: DefaultPerPage,
 		Limit:  DefaultOffset,
 	}
+
 	// 初始化
 	params.Range = reqRange
 
@@ -129,7 +129,7 @@ func ParserParams(c *gin.Context) UrlParams {
 
 		// 将过滤器中的所有参数都解析出来供
 		// 业务查询进行使用
-		filterInstance := make(map[string]string, 0)
+		filterInstance := make(map[string][]string, 0)
 
 		err := json.Unmarshal([]byte(filter[0]), &filterInstance)
 		if err != nil {
