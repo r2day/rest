@@ -36,7 +36,7 @@ type UrlParams struct {
 
 	HasFilter bool `form:"has_filter" json:"has_filter" xml:"has_filter"`
 	// Filter    FilterRequest
-	FilterMap map[string]string `form:"filter_map" json:"filter_map" xml:"filter_map"`
+	FilterMap map[string][]string `form:"filter_map" json:"filter_map" xml:"filter_map"`
 }
 
 func ParserParams(c *gin.Context) UrlParams {
