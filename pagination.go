@@ -14,12 +14,12 @@ import (
 const (
 	// 默认每页展示
 	DefaultPerPage = 15
-	// 默认展示最大记录每页
-	DefaultMaxPerPage = 99
 	// 默认起始索引
 	DefaultOffset = 0
 	// 默认页面数量
 	DefaultPageNum = 1
+	// 默认展示最大记录每页
+	DefaultMaxPerPage = 99
 )
 
 const (
