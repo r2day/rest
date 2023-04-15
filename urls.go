@@ -37,8 +37,11 @@ type UrlParams struct {
 	HasFilter bool `form:"has_filter" json:"has_filter" xml:"has_filter"`
 	// Filter    FilterRequest
 	FilterMap map[string][]string `form:"filter_map" json:"filter_map" xml:"filter_map"`
+	// Filter    FilterRequest
+	FilterCommon CommonFilter `form:"filter_common" json:"filter_common" xml:"filter_common"`
 }
 
+// ParserParams 解析url请求参数
 func ParserParams(c *gin.Context) UrlParams {
 	params := UrlParams{}
 
@@ -54,7 +57,7 @@ func ParserParams(c *gin.Context) UrlParams {
 		WithField("hasRange", hasRange).WithField("range", rangeValue).
 		WithField("hasSort", hasSort).WithField("sort", sort)
 
-	logCtx.Info("==========================", )
+	logCtx.Info("==========================")
 	// 赋新的值
 	reqRange := ReqRange{
 		Offset: DefaultPerPage,
@@ -129,7 +132,10 @@ func ParserParams(c *gin.Context) UrlParams {
 
 		// 将过滤器中的所有参数都解析出来供
 		// 业务查询进行使用
+		// 第一次尝试解析如下格式
+		// ?filter={"roles":["643319a80e352fc415f598e1","64331bcba09fc7395567ba6c"]}
 		filterInstance := make(map[string][]string, 0)
+		parseByMap2SliceIsFailed := false
 
 		err := json.Unmarshal([]byte(filter[0]), &filterInstance)
 		if err != nil {
@@ -137,12 +143,28 @@ func ParserParams(c *gin.Context) UrlParams {
 			// 暂停继续解析
 			// 返回当前解析到的结果
 			logCtx.Error(err)
-			return params
+			// return params
+			parseByMap2SliceIsFailed = true
+		}
+
+		if parseByMap2SliceIsFailed {
+			filterInstance2 := CommonFilter{}
+			err := json.Unmarshal([]byte(filter[0]), &filterInstance2)
+			if err != nil {
+				// 如果是空的会解析失败
+				// 暂停继续解析
+				// 返回当前解析到的结果
+				logCtx.Error(err)
+				// 将解析到的map复制到参数对象中
+				params.FilterCommon = filterInstance2
+			}
+		} else {
+			// 将解析到的map复制到参数对象中
+			params.FilterMap = filterInstance
 		}
 
 		params.HasFilter = true
-		// 将解析到的map复制到参数对象中
-		params.FilterMap = filterInstance
+
 	}
 
 	logCtx.WithField("filterMap", params.FilterMap).Info("+++++++++++")

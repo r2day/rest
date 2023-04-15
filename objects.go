@@ -17,10 +17,34 @@ type FilterRequest struct {
 
 	// CategoryId 分类id
 	CategoryId string `form:"category_id" json:"category_id" xml:"category_id"`
+}
 
-	// ProductId 商品id
-	ProductId string `form:"product_id" json:"product_id" xml:"product_id"`
+// CommonFilter 常用的过滤器
+// 可以根据最常使用的一些过滤条件作为基本
+// 后续不断更新
+// 一般分类应该按照从大到小依次编排，以便选择合适的使用
+type CommonFilter struct {
+	// Status 状态
+	Status bool `form:"status" json:"status" xml:"status"`
+
+	// Company 公司
+	Company string `form:"company" json:"company" xml:"company"`
+
+	// Organization 组织
+	Organization string `form:"organization_id" json:"organization_id" xml:"organization_id"`
+
+	// CategoryId 分类
+	CategoryID string `form:"category_id" json:"category_id" xml:"category_id"`
+
+	// GroupID 分组
+	GroupID string `form:"group_id" json:"group_id" xml:"group_id"`
+
+	// Tag 标签
+	Tag string `form:"tag" json:"tag" xml:"tag"`
 
 	// BrandId 品牌id
-	BrandId string `form:"brand_id" json:"brand_id" xml:"brand_id"`
+	BrandID string `form:"brand_id" json:"brand_id" xml:"brand_id"`
+
+	// ProductId 商品id
+	ProductID string `form:"product_id" json:"product_id" xml:"product_id"`
 }
