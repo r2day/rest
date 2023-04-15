@@ -149,7 +149,7 @@ func ParserParams(c *gin.Context) UrlParams {
 
 		if parseByMap2SliceIsFailed {
 			filterInstance2 := CommonFilter{}
-			err := json.Unmarshal([]byte(filter[0]), &filterInstance2)
+			err := json.Unmarshal([]byte(filter), &filterInstance2)
 			if err != nil {
 				// 如果是空的会解析失败
 				// 暂停继续解析
