@@ -149,15 +149,15 @@ func ParserParams(c *gin.Context) UrlParams {
 
 		if parseByMap2SliceIsFailed {
 			filterInstance2 := CommonFilter{}
-			err := json.Unmarshal([]byte(filter), &filterInstance2)
+			err := json.Unmarshal([]byte(filter[0]), &filterInstance2)
 			if err != nil {
 				// 如果是空的会解析失败
 				// 暂停继续解析
 				// 返回当前解析到的结果
 				logCtx.Error(err)
-				// 将解析到的map复制到参数对象中
-				params.FilterCommon = filterInstance2
 			}
+			// 将解析到的map复制到参数对象中
+			params.FilterCommon = filterInstance2
 		} else {
 			// 将解析到的map复制到参数对象中
 			params.FilterMap = filterInstance
