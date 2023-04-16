@@ -141,6 +141,7 @@ func ParserParams(c *gin.Context) UrlParams {
 			// 解析出空的过滤器 {}
 			params.HasFilter = false
 			logCtx.WithField("params.HasFilter", params.HasFilter).Info("payload is empty")
+			return params
 		}
 		err := json.Unmarshal([]byte(payload), &filterInstance)
 		if err != nil {
