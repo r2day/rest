@@ -14,12 +14,15 @@ import (
 )
 
 const (
+	// DefaultExpireLoginSessionTime 默认超时时间
 	DefaultExpireLoginSessionTime = 24 // 默认 登陆有效时长24h
 )
 
 var (
+	// ExpireLoginSessionTime 登陆时间
 	ExpireLoginSessionTime = DefaultExpireLoginSessionTime
-	CustomLoginExpireTime  = os.Getenv("CUSTOME_LOGIN_EXPIRE_TIME")
+	// CustomLoginExpireTime 自定义超时时间
+	CustomLoginExpireTime = os.Getenv("CUSTOME_LOGIN_EXPIRE_TIME")
 )
 
 func init() {
@@ -29,15 +32,14 @@ func init() {
 }
 
 // RenderLogin 返回登陆信息
-func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwordFromReq string, jwtKey []byte, host string) {
+func RenderLogin(c *gin.Context, accountID string, passwordFromDB []byte, passwordFromReq string, jwtKey []byte, host string) {
 
-	logCtx := log.WithField("account_id", accountId)
+	logCtx := log.WithField("accountID", accountID)
 	// 检查密码hash是否相同
 	if err := bcrypt.CompareHashAndPassword(passwordFromDB, []byte(passwordFromReq)); err != nil {
-		// c.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "message": "code is no correct"})
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "the password or account isn't correct",
-			"account_id": accountId,
+			"account_id": accountID,
 			"status":     "error",
 			"title":      "An error occurred.",
 		})
@@ -47,7 +49,7 @@ func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwo
 
 	// 声明密码签名
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Issuer:    accountId,
+		Issuer:    accountID,
 		ExpiresAt: time.Now().Add(time.Hour * time.Duration(ExpireLoginSessionTime)).Unix(), //1 day
 	})
 
@@ -56,7 +58,7 @@ func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwo
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "the sign isn't correct",
-			"account_id": accountId,
+			"account_id": accountID,
 			"status":     "error",
 			"title":      "An error occurred.",
 		})
@@ -69,7 +71,7 @@ func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwo
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":    "the encode to base64 isn't correct",
-			"account_id": accountId,
+			"account_id": accountID,
 			"status":     "error",
 			"title":      "An error occurred.",
 			"error":      err.Error(),
@@ -81,9 +83,9 @@ func RenderLogin(c *gin.Context, accountId string, passwordFromDB []byte, passwo
 	// 设置缓存过期时间
 	c.SetCookie("jwt", token, 3600*ExpireLoginSessionTime, "/", host, false, false)
 
-	c.JSON(http.StatusCreated, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message":    "sign in success",
-		"account_id": accountId,
+		"account_id": accountID,
 		"status":     "success",
 		"title":      "Sign In.",
 	})

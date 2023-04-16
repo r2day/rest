@@ -57,7 +57,7 @@ func ParserParams(c *gin.Context) UrlParams {
 		WithField("hasRange", hasRange).WithField("range", rangeValue).
 		WithField("hasSort", hasSort).WithField("sort", sort)
 
-	logCtx.Info("==========================")
+	logCtx.Debug("query params")
 	// 赋新的值
 	reqRange := ReqRange{
 		Offset: DefaultPerPage,
@@ -173,6 +173,5 @@ func ParserParams(c *gin.Context) UrlParams {
 
 	}
 
-	logCtx.WithField("filterMap", params.FilterMap).Info("+++++++++++")
 	return params
 }
