@@ -136,8 +136,13 @@ func ParserParams(c *gin.Context) UrlParams {
 		// ?filter={"roles":["643319a80e352fc415f598e1","64331bcba09fc7395567ba6c"]}
 		filterInstance := make(map[string][]string, 0)
 		parseByMap2SliceIsFailed := false
-
-		err := json.Unmarshal([]byte(filter[0]), &filterInstance)
+		payload := filter[0]
+		if len(payload) == 2 {
+			// 解析出空的过滤器 {}
+			params.HasFilter = false
+			logCtx.WithField("params.HasFilter", params.HasFilter).Info("payload is empty")
+		}
+		err := json.Unmarshal([]byte(payload), &filterInstance)
 		if err != nil {
 			// 如果是空的会解析失败
 			// 暂停继续解析
@@ -149,7 +154,7 @@ func ParserParams(c *gin.Context) UrlParams {
 
 		if parseByMap2SliceIsFailed {
 			filterInstance2 := CommonFilter{}
-			err := json.Unmarshal([]byte(filter[0]), &filterInstance2)
+			err := json.Unmarshal([]byte(payload), &filterInstance2)
 			if err != nil {
 				// 如果是空的会解析失败
 				// 暂停继续解析
