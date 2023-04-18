@@ -130,12 +130,11 @@ func ParserParams(c *gin.Context) UrlParams {
 	// /v1/auth/merchant/roles?filter={"roles":"642f7c008ac505a238abb4d2"}&range=[0,24]&sort=["id","DESC"]
 	if hasFilter {
 
-		// 将过滤器中的所有参数都解析出来供
-		// 业务查询进行使用
-		// 第一次尝试解析如下格式
-		// ?filter={"roles":["643319a80e352fc415f598e1","64331bcba09fc7395567ba6c"]}
-		filterInstance := make(map[string][]string, 0)
-		parseByMap2SliceIsFailed := false
+		// filter={"id":[["643dff4b3d3a75a2433107a8"]]}
+		// <ReferenceInput source="apps" reference="menu.v1.auth.merchant.apps">
+		// <CheckboxGroupInput />
+		// </ReferenceInput>
+		filterInstance2DSlice := make(map[string][][]string, 0)
 		payload := filter[0]
 		if len(payload) == 2 {
 			// 解析出空的过滤器 {}
@@ -143,7 +142,30 @@ func ParserParams(c *gin.Context) UrlParams {
 			logCtx.WithField("params.HasFilter", params.HasFilter).Info("payload is empty")
 			return params
 		}
-		err := json.Unmarshal([]byte(payload), &filterInstance)
+		err := json.Unmarshal([]byte(payload), &filterInstance2DSlice)
+		if err != nil {
+			// 如果是空的会解析失败
+			// 暂停继续解析
+			// 返回当前解析到的结果
+			logCtx.Error(err)
+
+		} else {
+			for k, v := range filterInstance2DSlice {
+				if len(v) == 1 {
+					params.FilterMap[k] = v[0]
+				}
+			}
+			return params
+		}
+
+		// 将过滤器中的所有参数都解析出来供
+		// 业务查询进行使用
+		// 第一次尝试解析如下格式
+		// ?filter={"roles":["643319a80e352fc415f598e1","64331bcba09fc7395567ba6c"]}
+		filterInstance := make(map[string][]string, 0)
+		parseByMap2SliceIsFailed := false
+
+		err = json.Unmarshal([]byte(payload), &filterInstance)
 		if err != nil {
 			// 如果是空的会解析失败
 			// 暂停继续解析
