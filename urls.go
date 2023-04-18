@@ -129,7 +129,7 @@ func ParserParams(c *gin.Context) UrlParams {
 	// 如果存在过滤，则将其解析到map中
 	// /v1/auth/merchant/roles?filter={"roles":"642f7c008ac505a238abb4d2"}&range=[0,24]&sort=["id","DESC"]
 	if hasFilter {
-
+		filterInstance := make(map[string][]string, 0)
 		// filter={"id":[["643dff4b3d3a75a2433107a8"]]}
 		// <ReferenceInput source="apps" reference="menu.v1.auth.merchant.apps">
 		// <CheckboxGroupInput />
@@ -150,11 +150,13 @@ func ParserParams(c *gin.Context) UrlParams {
 			logCtx.Error(err)
 
 		} else {
+
 			for k, v := range filterInstance2DSlice {
 				if len(v) == 1 {
-					params.FilterMap[k] = v[0]
+					filterInstance[k] = v[0]
 				}
 			}
+			params.FilterMap = filterInstance
 			return params
 		}
 
@@ -162,7 +164,7 @@ func ParserParams(c *gin.Context) UrlParams {
 		// 业务查询进行使用
 		// 第一次尝试解析如下格式
 		// ?filter={"roles":["643319a80e352fc415f598e1","64331bcba09fc7395567ba6c"]}
-		filterInstance := make(map[string][]string, 0)
+
 		parseByMap2SliceIsFailed := false
 
 		err = json.Unmarshal([]byte(payload), &filterInstance)
