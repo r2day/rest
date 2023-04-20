@@ -47,4 +47,10 @@ type CommonFilter struct {
 
 	// ProductId 商品id
 	ProductID string `form:"product_id" json:"product_id" xml:"product_id"`
+
+	// Gender 性别
+	Gender string `form:"gender" json:"gender" xml:"gender"`
+
+	// From 来源
+	From string `form:"from" json:"from" xml:"from"`
 }
