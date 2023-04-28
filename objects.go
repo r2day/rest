@@ -53,4 +53,7 @@ type CommonFilter struct {
 
 	// From 来源
 	From string `form:"from" json:"from" xml:"from"`
+
+	// OrderCategory 订单分类
+	OrderCategory string `form:"order_category" json:"order_category" xml:"order_category"`
 }
