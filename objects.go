@@ -36,6 +36,8 @@ type CommonFilter struct {
 	// CategoryId 分类
 	CategoryID string `form:"category_id" json:"category_id" xml:"category_id"`
 
+	// CategoryName 分类
+	CategoryName string `form:"category_name" json:"category_name" xml:"category_name"`
 	// GroupID 分组
 	GroupID string `form:"group_id" json:"group_id" xml:"group_id"`
 
