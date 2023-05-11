@@ -22,7 +22,7 @@ var (
 	// ExpireLoginSessionTime 登陆时间
 	ExpireLoginSessionTime = DefaultExpireLoginSessionTime
 	// CustomLoginExpireTime 自定义超时时间
-	CustomLoginExpireTime = os.Getenv("CUSTOME_LOGIN_EXPIRE_TIME")
+	CustomLoginExpireTime = os.Getenv("CUSTOM_LOGIN_EXPIRE_TIME")
 )
 
 func init() {
