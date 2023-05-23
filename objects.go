@@ -1,7 +1,7 @@
 package rest
 
-// CreateResponse 返回
-type CreateResponse struct {
+// SimpleResponse 返回内容
+type SimpleResponse struct {
 	Id      string `json:"id"`
 	Message string `json:"message"`
 }

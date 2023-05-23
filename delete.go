@@ -10,7 +10,7 @@ import (
 func RenderDelete(c *gin.Context, id string, message string) {
 	// 写入头部信息，用于reactjs-admin 进行识别从而完成分页
 	// 返回数据部分
-	rsp := CreateResponse{
+	rsp := SimpleResponse{
 		Id:      id,
 		Message: message,
 	}
