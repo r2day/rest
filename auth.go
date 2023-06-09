@@ -32,7 +32,8 @@ func init() {
 }
 
 // RenderLogin 返回登陆信息
-func RenderLogin(c *gin.Context, accountID string, passwordFromDB []byte, passwordFromReq string, jwtKey []byte, host string, roles []string) {
+func RenderLogin(c *gin.Context, accountID string, passwordFromDB []byte, passwordFromReq string,
+	jwtKey []byte, host string, roles []string, toolbar int) {
 
 	logCtx := log.WithField("accountID", accountID)
 	// 检查密码hash是否相同
@@ -87,6 +88,7 @@ func RenderLogin(c *gin.Context, accountID string, passwordFromDB []byte, passwo
 		"message":    "sign in success",
 		"account_id": accountID,
 		"roles":      roles,
+		"tool_bar":   toolbar,
 		"status":     "success",
 		"title":      "Sign In.",
 	})

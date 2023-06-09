@@ -60,4 +60,6 @@ type CommonFilter struct {
 	OrderCategory string `form:"order_category" json:"order_category" xml:"order_category"`
 	// Level 等级
 	Level string `form:"level" json:"level" xml:"level"`
+	// 关联关系
+	Of string `form:"of" json:"of" xml:"level"`
 }
