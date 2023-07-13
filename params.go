@@ -223,10 +223,16 @@ func (p *Params) ToMongoOptions() *options.FindOptions {
 // ToMongoFilter 加载字符串参数
 // filter={"category":"646cceafccc54408c8ccb308","category_id":"646cceafccc54408c8ccb308","status":false}&order=ASC&page=1&perPage=10&sort=id
 func (p *Params) ToMongoFilter(merchantID string, accessLevel uint) bson.D {
+	if merchantID == "" || accessLevel < 1 {
+		return bson.D{}
+	}
 	filters := bson.D{{Key: "meta.merchant_id", Value: merchantID},
 		{"meta.access_level", bson.D{{"$lte", accessLevel}}}}
 
 	for key, val := range p.Filter {
+		if val == "" || val == nil || val == 0 {
+			continue
+		}
 		// 需要翻译的key
 		finalKey, ok := p.Translate[key]
 		if ok {
